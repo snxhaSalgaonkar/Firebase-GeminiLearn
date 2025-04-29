@@ -1,4 +1,5 @@
 import 'package:firebasestart/gemini/imagedata.dart';
+import 'package:firebasestart/gemini/imagepick.dart';
 import 'package:firebasestart/gemini/start3.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Firebase learn',
-      home: imageDesc(),
+      home: PickImage(),
     );
   }
 }

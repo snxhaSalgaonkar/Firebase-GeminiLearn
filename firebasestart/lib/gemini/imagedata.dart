@@ -12,21 +12,20 @@ class imageDesc extends StatefulWidget {
 }
 
 class _imageDescState extends State<imageDesc> {
-  String prompt =
-      '''Give me a tabular description of the object in the attached image. 
+  String prompt = '''
+ Give me a tabular description of the object in the attached image. 
       the desciption should be in the format below 
-      •	1.Brand Name: 
-•	2.Model:
-•	3.Serial number: 
-•	4.Name: What type of object is it? (e.g., helmet, phone, bag)
+      •	1.Name: What type of object is it? (e.g., helmet, phone, bag) 
+•	2.Brand:
+•	3.Model:
 •	5.Color: Main colors and any special color patterns.
 •	6.Size: Is it small, medium, large? Rough dimensions help.
 •	7.Shape: What is the general shape? (round, rectangular, etc.)
-•	8.Unique Marks: Any scratches, stickers, logos, designs, writing, or damage.
-•	9.Texture: Smooth, rough, shiny, matte, etc.
-•	10.Material look: Plastic, leather, cloth, metal, etc.
-•	11.Special Features: Zippers, buttons, straps, logos, printed names, drawings, etc.
+•	8.Unique Marks: Any scratches, stickers, logos, designs, writing, 
+Zippers, buttons, straps, logos, printed names, drawings, etc.
+
 ''';
+
   String outputt = '';
   void askgemini() async {
     try {
@@ -48,12 +47,9 @@ class _imageDescState extends State<imageDesc> {
             (value?.content?.parts?.first as TextPart).text ??
             "No description received.";
       });
-
-      print("3##################################");
       print(outputt);
-    } catch (e, stackTrace) {
-      print('***************** Text image input $e');
-      print('***************** Text image input $stackTrace');
+    } catch (e) {
+      
       setState(() {
         outputt = "Error loading image or getting response!";
       });
