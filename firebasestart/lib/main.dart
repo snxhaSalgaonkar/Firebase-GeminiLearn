@@ -1,6 +1,8 @@
 import 'package:firebasestart/gemini/imagedata.dart';
 import 'package:firebasestart/gemini/imagepick.dart';
-import 'package:firebasestart/gemini/start3.dart';
+import 'package:firebasestart/uploadImage/cloudinaryEg.dart';
+import 'package:firebasestart/uploadImage/start1.dart';
+import 'package:firebasestart/uploadImage/start2.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Firebase learn',
-      home: PickImage(),
+      home: CloudinaryExample(),
     );
   }
 }
