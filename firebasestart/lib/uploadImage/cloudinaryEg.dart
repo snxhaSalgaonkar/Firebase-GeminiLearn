@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:firebasestart/uploadImage/control/varaible.dart';
+import 'package:firebasestart/uploadImage/demo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +14,7 @@ class CloudinaryExample extends StatefulWidget {
 
 class _CloudinaryExampleState extends State<CloudinaryExample> {
   String? _imageUrl;
+
   File? _imagefile;
   bool _isUploading = false;
   Uint8List? _webImageBytes; // Web only
@@ -29,6 +32,7 @@ class _CloudinaryExampleState extends State<CloudinaryExample> {
       _imagefile = null;
       _webImageBytes = null;
       _pickedMultipartFile = null;
+      imageurl = null;
     });
 
     if (kIsWeb) {
@@ -78,7 +82,8 @@ class _CloudinaryExampleState extends State<CloudinaryExample> {
         final jsonMap = jsonDecode(responseString);
 
         setState(() {
-          _imageUrl = jsonMap['secure_url']; // stores the Cloudinary URL
+          _imageUrl = jsonMap['secure_url'];
+          imageurl = _imageUrl; // stores the Cloudinary URL
         });
         print("**************************");
         print('Upload successful: $_imageUrl');
@@ -139,22 +144,24 @@ class _CloudinaryExampleState extends State<CloudinaryExample> {
                           : Text("Upload to Cloudinary"),
                 ),
 
-              // if (_imagefile != null)
-              //   ElevatedButton(
-              //     onPressed: _isUploading ? null : _uploadImage,
-              //     child:
-              //         _isUploading
-              //             ? CircularProgressIndicator(color: Colors.white)
-              //             : Text("Upload to Cloudinary"),
-              //   ),
               SizedBox(height: 20),
               if (_imageUrl != null) ...[
+                Text(_imageUrl!),
                 Image.network(_imageUrl!),
                 SizedBox(height: 20),
                 SelectableText(
                   " Cloundinary URL: $_imageUrl",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Demo()),
+                    );
+                  },
+                  child: Text('Show Url'),
                 ),
               ],
             ],
