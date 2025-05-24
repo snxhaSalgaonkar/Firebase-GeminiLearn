@@ -73,6 +73,7 @@ class PpickImageState extends State<PickImage> {
         description = 'error: ::: $e';
       });
     }
+    print(description);
   }
 
   @override
@@ -102,7 +103,6 @@ class PpickImageState extends State<PickImage> {
                   : 'Image description will appear here.',
               textAlign: TextAlign.center,
             ),
-           
           ],
         ),
       ),

@@ -69,7 +69,6 @@ class _CloudinaryExampleState extends State<CloudinaryExample> {
           ..fields['upload_preset'] = 'learnbackend'
           ..fields['folder'] = 'flutter1'
           ..files.add(_pickedMultipartFile!);
-    print("***********");
     print("Resquest send");
     print("$request");
 
@@ -85,26 +84,21 @@ class _CloudinaryExampleState extends State<CloudinaryExample> {
           _imageUrl = jsonMap['secure_url'];
           imageurl = _imageUrl; // stores the Cloudinary URL
         });
-        print("**************************");
         print('Upload successful: $_imageUrl');
       } else {
-        print("**************************");
         print('Upload failed: ${response.statusCode}');
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Upload failed. Try again.')));
       }
     } catch (e) {
-      print("**************************");
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An error occurred during upload')),
       );
     } finally {
       if (mounted) {
-        print("**************************");
         print("mounted");
-
         setState(() {
           _isUploading = false;
         });
