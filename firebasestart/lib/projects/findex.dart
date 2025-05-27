@@ -30,20 +30,20 @@ class _SelectItemPageState extends State<SelectItemPage> {
   ];
 
   String? selectedItem;
+  //pick image
   String? _imageUrl;
-
   File? _imagefile;
-  bool _isUploading = false;
   Uint8List? _webImageBytes; // Web only
   http.MultipartFile? _pickedMultipartFile;
   String? imageurl;
+
+  bool _isUploading = false; //to get decs
+
   String description = '';
   String prompt = 'Describe the image';
   bool isEditing = false;
   TextEditingController descriptionController = TextEditingController();
   bool _saved = false;
-  // String? ques;
-  // bool quesans = true;
   String ques = '';
   bool? quesAns;
 
@@ -51,6 +51,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
   TextEditingController falseQcontroller = TextEditingController();
 
   void _showAlertBox(BuildContext context) {
+    //if choose other
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -60,7 +61,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
             onChanged: (value) {
               setState(() {
                 selectedItem = value;
-                itemcontroller.text = value;
+                itemcontroller.text = value; //saves the value
               });
             },
             // onChanged: (value) => selectedItem = value,
@@ -92,6 +93,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
   }
 
   void _showItemSelectionSheet() {
+    //takes the item type and saves into "String? selectedItem"
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -111,7 +113,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
 
                 if (selectedItem == 'Other') {
                   _showAlertBox(context);
-                  itemcontroller.clear();
+                  itemcontroller.clear(); //clear "other"
                 }
               },
             );
@@ -122,6 +124,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
   }
 
   void _onSubmit() {
+    //summit the item type
     if (itemcontroller != null) {
       print('Selected Item =$selectedItem');
     } else {
@@ -139,7 +142,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
     //1.pick a image
     //2. for web pass uit8list to _webImageBytes
     //3. for !web passs file to _imagefile
-    //4. create a PickedMultipartfile
+    //4. create a PickedMultipartfile for cloudinary
 
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(
@@ -158,7 +161,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
     if (kIsWeb) {
       final bytes = await pickedFile.readAsBytes();
       setState(() {
-        _webImageBytes = bytes;
+        _webImageBytes = bytes; //save data
         _pickedMultipartFile = http.MultipartFile.fromBytes(
           'file',
           bytes,
@@ -168,7 +171,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
     } else {
       final file = File(pickedFile.path);
       setState(() {
-        _imagefile = file;
+        _imagefile = file; //save data
       });
       _pickedMultipartFile = await http.MultipartFile.fromPath(
         'file',
@@ -204,18 +207,20 @@ class _SelectItemPageState extends State<SelectItemPage> {
     //get the description and store it into description string
     print("gemini is called");
     try {
-      _isUploading = true;
+      setState(() {
+        _isUploading = true;
+      });
       final result = await Gemini.instance.textAndImage(
         text: prompt,
         images: [bytes],
       );
       setState(() {
-        description = result?.output ?? 'No description provided';
-        //_isUploading = false;
+        description = result?.output ?? 'No description provided'; //data saved
       });
     } catch (e) {
       setState(() {
         description = 'error: ::: $e';
+        print(description);
       });
     } finally {
       setState(() {
@@ -395,15 +400,6 @@ class _SelectItemPageState extends State<SelectItemPage> {
           });
     }
   }
-  // Future<void> Submit() {
-  //   _uploadImage();
-  //   //get url from cloudinary
-  //   //sen data to firbase
-  //   //String? imageurl;
-  //   //String description = '';
-  //   //String? selectedItem;
-  //   //
-  // }
 
   void printFuctionOnsubmit() {
     print('******************************');
@@ -417,6 +413,27 @@ class _SelectItemPageState extends State<SelectItemPage> {
     print(description);
     print("quesAns");
     print(quesAns);
+  }
+
+  void clearData() {
+    selectedItem = null;
+    _imageUrl = null;
+    _imagefile = null;
+    _webImageBytes = null; // Web only
+    _pickedMultipartFile = null;
+    imageurl = null;
+
+    _isUploading = false; //to get decs
+
+    description = '';
+    isEditing = false;
+    descriptionController.clear();
+    _saved = false;
+    ques = '';
+    quesAns = null;
+
+    itemcontroller.clear();
+    falseQcontroller.clear();
   }
 
   @override
@@ -447,6 +464,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
 
               //button to submit
               //svaed in selecteditem
+              //button to clear
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -464,6 +482,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
 
               //pickimage
               //save in Imagefile, _weImageBytes
+              //display after selecting
               ElevatedButton(
                 onPressed: _pickImage,
                 style: ElevatedButton.styleFrom(
@@ -479,12 +498,16 @@ class _SelectItemPageState extends State<SelectItemPage> {
                             width: 200,
                             height: 200,
                             child:
-                                kIsWeb && _webImageBytes != null
+                                kIsWeb &&
+                                        _webImageBytes !=
+                                            null //website
                                     ? Image.memory(
                                       _webImageBytes!,
                                       fit: BoxFit.cover,
                                     )
-                                    : (!kIsWeb && _imagefile != null
+                                    : (!kIsWeb &&
+                                            _imagefile !=
+                                                null //app
                                         ? Image.file(
                                           _imagefile!,
                                           fit: BoxFit.cover,
@@ -526,7 +549,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(description!),
+                    Text(description),
                     SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
@@ -558,7 +581,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
                           description = descriptionController.text;
                           isEditing = false;
                           print(description);
-                          _saved = true;
+                          _saved = true; //edited descriotion is saved
                         });
                       },
                       child: Text('Save'),
@@ -577,7 +600,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
                 ),
 
               SizedBox(height: 20),
-              ques == null
+              ques == ''
                   ? Center(
                     child: Text(
                       'No question added yet.',
@@ -598,16 +621,16 @@ class _SelectItemPageState extends State<SelectItemPage> {
                             'Question:',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.white70,
+                              color: const Color.fromARGB(179, 16, 16, 16),
                             ),
                           ),
                           SizedBox(height: 8),
                           Text(
-                            ques!,
+                            ques,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: const Color.fromARGB(255, 0, 0, 0),
                             ),
                           ),
                           SizedBox(height: 16),
@@ -657,6 +680,8 @@ class _SelectItemPageState extends State<SelectItemPage> {
                       description,
                       quesAns!,
                     );
+
+                    clearData();
                   },
                   child: Text("submit data to firebase"),
                 ),
