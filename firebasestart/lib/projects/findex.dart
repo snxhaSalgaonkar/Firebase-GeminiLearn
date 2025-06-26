@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebasestart/database/adddata.dart';
-import 'package:firebasestart/homepage.dart';
+import 'package:firebasestart/projects/displaydata2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -388,6 +387,8 @@ class _SelectItemPageState extends State<SelectItemPage> {
       FirebaseFirestore.instance
           .collection('Findex')
           .doc("LostItem")
+          .collection('items')
+          .doc()
           .set({
             'Itemtype': itemtype,
             'imageurl': imageurl,
@@ -445,6 +446,17 @@ class _SelectItemPageState extends State<SelectItemPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              //display database
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LostItemsScreen2()),
+                  );
+                },
+                child: Text('Get Database'),
+              ),
+
               //enter the type
               GestureDetector(
                 onTap: _showItemSelectionSheet,
@@ -545,7 +557,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
               //able to edit it
               if (_isUploading)
                 CircularProgressIndicator()
-              else if (description != null && !isEditing)
+              else if (description != "" && !isEditing)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
